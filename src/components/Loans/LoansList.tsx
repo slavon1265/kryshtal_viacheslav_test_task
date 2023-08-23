@@ -1,105 +1,111 @@
-import { Box, Card, Grid, Hidden, Typography, useMediaQuery } from '@mui/material';
-import moment from 'moment';
-import React from 'react';
-// eslint-disable-next-line import/extensions
-import data from '../../data/loans.json';
-import useStyles from './LoansListStyles';
+import {
+  Box,
+  Card,
+  Chip,
+  Grid,
+  Hidden,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
+import React, { useState } from 'react';
 import theme from '../../theme/theme';
+import { useLoanTabs } from '../../hooks';
+import SwipeableViews from 'react-swipeable-views';
+import { TabPanel } from '../TabPannel';
+import { LoanRow } from './LoanRow';
+import useStyles from './LoansListStyles';
 
+const LOAN_TAB_PANEL_NAME = 'LOAN_TAB_PANEL_NAME';
 
-const LoansList: React.FC = () => {
-  const { loanRequests }: any = data;
-  const mobile = useMediaQuery(theme.breakpoints.down('xs'));
+const LoansList = (): JSX.Element => {
+  const loanTabs = useLoanTabs();
   const styles = useStyles();
+  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
-  // eslint-disable-next-line no-console
-  console.log(loanRequests);
+  const [currentTabIndex, setCurrentTabIndex] = useState(0);
+
+  const handleChangeTabIndex = (index: number) => {
+    setCurrentTabIndex(index);
+  };
 
   return (
     <>
-      <Typography variant="h2" sx={{ marginBottom: 8 }}>Financing</Typography>
+      <Typography variant='h2' sx={{ marginBottom: 8 }}>
+        Financing
+      </Typography>
+      <Tabs
+        value={currentTabIndex}
+        onChange={(e, value) => handleChangeTabIndex(value)}
+        aria-label='loans request tabs'
+        variant="scrollable"
+        scrollButtons="auto"
+        allowScrollButtonsMobile
+      >
+        {loanTabs.map((tab, index) => (
+          <Tab
+            key={tab.status}
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Typography sx={{ fontSize: 12 }}>{tab.label}</Typography>
+                <Chip
+                  sx={{ fontSize: 12 }}
+                  label={tab.count}
+                  size='small'
+                  color="primary"
+                />
+              </Box>
+            }
+            id={`${LOAN_TAB_PANEL_NAME}-${index}`}
+            aria-controls={`${LOAN_TAB_PANEL_NAME}-${index}`}
+          />
+        ))}
+      </Tabs>
       <Hidden smDown>
         <Card className={styles.loansListHeader} elevation={0}>
           <Grid container>
-            <Grid item xs={2}>Loan ID</Grid>
-            <Grid item xs={2}><Box textAlign="right">Requested</Box></Grid>
-            <Grid item xs={2}><Box textAlign="right">Duration</Box></Grid>
-            <Grid item xs={3}><Box textAlign="right">Amount</Box></Grid>
-            <Grid item xs={3}><Box textAlign="right">Status</Box></Grid>
+            <Grid item xs={2}>
+              Loan ID
+            </Grid>
+            <Grid item xs={2}>
+              <Box textAlign='right'>Requested</Box>
+            </Grid>
+            <Grid item xs={2}>
+              <Box textAlign='right'>Duration</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box textAlign='right'>Amount</Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box textAlign='right'>Status</Box>
+            </Grid>
           </Grid>
         </Card>
       </Hidden>
-      {loanRequests.map((loan: any) => (
-        <Card className={styles.loanCard} key={loan.id}>
-          <Grid container alignItems={mobile ? 'flex-start' : 'center'}>
-            <Grid item xs={7} sm={2}>
-              <span className={styles.name}>
-                <Hidden smDown>
-                  FL
-                  {' '}
-                </Hidden>
-                {loan.externalId}
-              </span>
-              <Hidden smUp>
-                <Box component="span" ml={2} mb={-0.5} className={`${styles.status} ${loan.status.replaceAll(/\s+/g, '-')}`}>
-                  {loan.status}
-                </Box>
-              </Hidden>
-              <div className={`${styles.subtitle} ${styles.nameSubtitle}`}>{loan.account?.company.name}</div>
-              <Hidden smUp>
-                <Box className={styles.date} pt={1} color={theme.palette.text.secondary}>
-                  {moment(loan.createdAt).format('DD MMM YYYY')}
-                </Box>
-              </Hidden>
-            </Grid>
-            <Hidden smDown>
-              <Grid item xs={12} sm={2}>
-                <div className={styles.date}>
-                  {moment(loan.createdAt).format('DD MMM YYYY')}
-                </div>
-              </Grid>
-              <Grid item xs sm={2}>
-                <div className={styles.date}>
-                  {`${loan.duration} months`}
-                </div>
-              </Grid>
-            </Hidden>
-            <Grid item xs={5} sm={3}>
-              <Box className={styles.amountBox}>
-                <Typography component="div" variant="caption" className={styles.amount} align="right">
-                  {`${loan.amount.toLocaleString('de-DE', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}`}
-                  &nbsp;€
-                </Typography>
-                <Hidden smUp>
-                  <Box mt={2} mb={1} className={styles.date} color={theme.palette.text.secondary} textAlign="right">
-                    for
-                    {' '}
-                    {`${loan.duration} months`}
-                  </Box>
-                </Hidden>
-                <Box className={styles.subtitle} textAlign="right">
-                  {`${loan.monthlyPayment.toLocaleString('de-DE', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}€ / month`}
-                </Box>
-              </Box>
-            </Grid>
-            <Hidden smDown>
-              <Grid item xs={12} sm={3}>
-                <Box textAlign="right">
-                  <span className={`${styles.status} ${loan.status.replaceAll(/\s+/g, '-')}`}>
-                    {loan.status}
-                  </span>
-                </Box>
-              </Grid>
-            </Hidden>
-          </Grid>
-        </Card>
-      ))}
+      <SwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={currentTabIndex}
+        onChangeIndex={handleChangeTabIndex}
+      >
+        {loanTabs.map((tab, index) => (
+          <TabPanel
+            key={tab.status}
+            name={LOAN_TAB_PANEL_NAME}
+            value={currentTabIndex}
+            index={index}
+            dir={theme.direction}
+          >
+            {tab.loanRequests.map((loanRequest) => (
+              <LoanRow
+                key={loanRequest.id}
+                isMobile={isMobile}
+                loanRequest={loanRequest}
+              />
+            ))}
+          </TabPanel>
+        ))}
+      </SwipeableViews>
     </>
   );
 };

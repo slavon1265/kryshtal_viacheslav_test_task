@@ -2,6 +2,29 @@ import { alpha, Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 
 export default makeStyles((theme: Theme) => ({
+  statusColor: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'inline-flex',
+      padding: theme.spacing(1, 2),
+      height: theme.spacing(5),
+    },
+    '&.rejected': {
+      color: theme.palette.error.main,
+      backgroundColor: alpha(theme.palette.error.main, 0.2),
+    },
+    '&.active': {
+      color: theme.palette.info.dark,
+      backgroundColor: alpha(theme.palette.info.dark, 0.2),
+    },
+    '&.pending-settlement': {
+      color: theme.palette.info.main,
+      backgroundColor: alpha(theme.palette.info.main, 0.2),
+    },
+    '&.closed': {
+      color: theme.palette.text.primary,
+      backgroundColor: alpha(theme.palette.text.primary, 0.2),
+    },
+  },
   loanCard: {
     marginBottom: theme.spacing(4),
     padding: theme.spacing(4, 6),
@@ -72,28 +95,6 @@ export default makeStyles((theme: Theme) => ({
     fontWeight: theme.typography.fontWeightBold,
     color: '#E2A314',
     backgroundColor: alpha('#FFC542', 0.2),
-
-    [theme.breakpoints.down('sm')]: {
-      display: 'inline-flex',
-      padding: theme.spacing(1, 2),
-      height: theme.spacing(5),
-    },
-    '&.rejected': {
-      color: theme.palette.error.main,
-      backgroundColor: alpha(theme.palette.error.main, 0.2),
-    },
-    '&.active': {
-      color: theme.palette.info.dark,
-      backgroundColor: alpha(theme.palette.info.dark, 0.2),
-    },
-    '&.pending-settlement': {
-      color: theme.palette.info.main,
-      backgroundColor: alpha(theme.palette.info.main, 0.2),
-    },
-    '&.closed': {
-      color: theme.palette.text.primary,
-      backgroundColor: alpha(theme.palette.text.primary, 0.2),
-    },
   },
   amount: {
     fontWeight: theme.typography.fontWeightBold,

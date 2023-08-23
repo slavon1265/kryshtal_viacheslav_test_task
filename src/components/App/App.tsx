@@ -6,6 +6,7 @@ import Main from '../Main/Main';
 import LoansList from '../Loans/LoansList';
 
 function App() {
+  // eslint-disable-next-line no-console
   return (
     <>
       <CssBaseline />
