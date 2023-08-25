@@ -1,6 +1,11 @@
-# PULS test task
+# PULS test task Solution from Kryshtal Viacheslav
 
-This is a test task for FE position
+## Description
+
+* Implemented base solution according to task requirements;
+* Grouped and improved components tree by reduce the load on components;
+* Added better typing for components, data layers entities and hooks;
+* Covered implemented feature with unit tests for component (LoanList) and hook (useLoanTabs); 
 
 ## How to run locally
 
