@@ -7,6 +7,9 @@
 * Added better typing for components, data layers entities and hooks;
 * Covered implemented feature with unit tests for component (LoanList) and hook (useLoanTabs); 
 
+
+![изображение](https://github.com/slavon1265/kryshtal_viacheslav_test_task/assets/60267157/c21ca82c-f089-4321-a8c3-3941ce6c4654)
+
 ## How to run locally
 
 * `npm i`
