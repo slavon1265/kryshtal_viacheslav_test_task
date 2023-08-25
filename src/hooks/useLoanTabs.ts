@@ -20,14 +20,13 @@ export const useLoanTabs = () => {
       const loanRequests = await loadLoansRequests();
       setLoanRequests(loanRequests);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
     initLoanRequests();
   }, []);
-
 
   return useMemo(() => getLoanTabs(loanRequests), [loanRequests]);
 };

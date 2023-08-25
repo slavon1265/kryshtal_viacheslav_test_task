@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Card, Grid, Hidden, Typography } from '@mui/material';
 import theme from '../../theme/theme';
-import moment from 'moment/moment';
 import useStyles from './LoansListStyles';
 import { LoanRequest } from '../../types';
 import classNames from 'classnames';
+import { DateTime } from 'luxon';
 
 type LoanRowProps = {
   isMobile: boolean;
@@ -14,11 +14,16 @@ type LoanRowProps = {
 export const LoanRow = ({
   isMobile,
   loanRequest,
+  ...leftProps
 }: LoanRowProps): JSX.Element => {
   const styles = useStyles();
 
+  const createdAt = DateTime.fromISO(loanRequest.createdAt).toFormat(
+    'dd MMM yyyy',
+  );
+
   return (
-    <Card className={styles.loanCard} key={loanRequest.id}>
+    <Card className={styles.loanCard} key={loanRequest.id} {...leftProps}>
       <Grid container alignItems={isMobile ? 'flex-start' : 'center'}>
         <Grid item xs={7} sm={2}>
           <span className={styles.name}>
@@ -48,15 +53,13 @@ export const LoanRow = ({
               pt={1}
               color={theme.palette.text.secondary}
             >
-              {moment(loanRequest.createdAt).format('DD MMM YYYY')}
+              {createdAt}
             </Box>
           </Hidden>
         </Grid>
         <Hidden smDown>
           <Grid item xs={12} sm={2}>
-            <div className={styles.date}>
-              {moment(loanRequest.createdAt).format('DD MMM YYYY')}
-            </div>
+            <div className={styles.date}>{createdAt}</div>
           </Grid>
           <Grid item xs sm={2}>
             <div
